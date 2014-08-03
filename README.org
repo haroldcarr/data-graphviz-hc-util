@@ -1,0 +1,3 @@
+Utilities for Data.GraphViz
+
+see [[http://haroldcarr.com/posts/2014-02-28-using-graphviz-via-haskell.html]]
