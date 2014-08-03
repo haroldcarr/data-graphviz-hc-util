@@ -1,6 +1,6 @@
 {-
 Created       : 2014 Feb 26 (Wed) 18:54:30 by Harold Carr.
-Last Modified : 2014 Aug 03 (Sun) 10:51:43 by Harold Carr.
+Last Modified : 2014 Aug 03 (Sun) 11:44:44 by Harold Carr.
 -}
 
 {-# LANGUAGE MultiParamTypeClasses #-}
@@ -9,14 +9,10 @@ Last Modified : 2014 Aug 03 (Sun) 10:51:43 by Harold Carr.
 module Data.GraphViz.HC.Util where
 
 import           Control.Monad                          (forM_)
-import           Data.Graph.Inductive
 import           Data.GraphViz
 import           Data.GraphViz.Attributes.Colors.Brewer
 import           Data.GraphViz.Attributes.Complete
-import           Data.GraphViz.Printing
-import qualified Data.GraphViz.Types.Generalised        as G
 import           Data.GraphViz.Types.Monadic
-import qualified Data.Text                              as T
 import           Data.Text.Lazy                         as L
 import           Data.Word
 import           System.FilePath
@@ -41,17 +37,25 @@ colorCombo2025 n = Color $ colorCombo2025CL n
 ------------------------------------------------------------------------------
 -- Shapes
 
-doubleCircle :: n -> Text -> Dot n
-doubleCircle n l = node n [textLabel l, shape DoubleCircle, FixedSize SetNodeSize, style filled, colorCombo2025 1, Width 1]
+doubleCircle        :: [Attribute] -> n -> Text -> Dot n
+doubleCircle as n l = node n $ [textLabel l, shape DoubleCircle, FixedSize SetNodeSize, style filled] ++ as
+doubleCircle'       :: n -> Text -> Dot n
+doubleCircle'       = doubleCircle [pastel28 1, Width 1] -- colorCombo2025 1
 
-circle       :: n -> Text -> Dot n
-circle       n l = node n [textLabel l, shape       Circle, FixedSize SetNodeSize, style filled, colorCombo2025 1, Width 1]
+circle              :: [Attribute] -> n -> Text -> Dot n
+circle       as n l = node n $ [textLabel l, shape       Circle, FixedSize SetNodeSize, style filled] ++ as
+circle'             :: n -> Text -> Dot n
+circle'             = circle       [pastel28 2, Width 1] -- colorCombo2025 1
 
-rectangle    :: n -> Text -> Dot n
-rectangle    n l = node n [textLabel l, shape     BoxShape,                        style filled, colorCombo2025 3, Width 1]
+rectangle           :: [Attribute] -> n -> Text -> Dot n
+rectangle    as n l = node n $ [textLabel l, shape     BoxShape,                        style filled] ++ as
+rectangle'          :: n -> Text -> Dot n
+rectangle'          = rectangle    [pastel28 5, Width 1] -- colorCombo2025 3
 
-decision     :: n -> Text -> Dot n
-decision     n l = node n [textLabel l, Shape DiamondShape, FixedSize SetNodeSize, style filled, pastel28 6,       Width 1.5, Height 1.5]
+decision            :: [Attribute] -> n -> Text -> Dot n
+decision     as n l = node n $ [textLabel l, Shape DiamondShape, FixedSize SetNodeSize, style filled] ++ as
+decision'           :: n -> Text -> Dot n
+decision'           = decision     [pastel28 6,       Width 1.5, Height 1.5]
 
 ------------------------------------------------------------------------------
 -- I/O
