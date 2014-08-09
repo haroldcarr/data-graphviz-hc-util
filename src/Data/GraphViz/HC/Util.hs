@@ -1,6 +1,6 @@
 {-
 Created       : 2014 Feb 26 (Wed) 18:54:30 by Harold Carr.
-Last Modified : 2014 Aug 08 (Fri) 19:54:00 by Harold Carr.
+Last Modified : 2014 Aug 09 (Sat) 14:08:11 by Harold Carr.
 -}
 
 {-# LANGUAGE MultiParamTypeClasses #-}
@@ -39,43 +39,43 @@ colorCombo2025 n = Color $ colorCombo2025CL n
 
 uBaseShape             :: [Attribute] -> n -> Text -> Dot n
 uBaseShape      as n l = node n $ [textLabel l, style filled] ++ as
-uBaseShape'            :: [Attribute] -> n -> Text -> Dot n
-uBaseShape'     as     = uBaseShape $ [FixedSize SetNodeSize] ++ as
+uFixedSize             :: [Attribute] -> [Attribute]
+uFixedSize             = ([FixedSize SetNodeSize] ++)
 
 uDoubleCircle          :: [Attribute] -> n -> Text -> Dot n
-uDoubleCircle   as     = uBaseShape' $ [shape DoubleCircle] ++ as
+uDoubleCircle   as     = uBaseShape $ [shape  DoubleCircle,  pastel28 1] ++ as
 uDoubleCircle'         ::                n -> Text -> Dot n
-uDoubleCircle'         = uDoubleCircle [pastel28 1, Width 1] -- colorCombo2025 1
+uDoubleCircle'         = uDoubleCircle  $ uFixedSize [Width 1] -- colorCombo2025 1
 
 uCircle                :: [Attribute] -> n -> Text -> Dot n
-uCircle         as     = uBaseShape' $ [shape  Circle]  ++ as
+uCircle         as     = uBaseShape $ [shape  Circle,        pastel28 2] ++ as
 uCircle'               ::                n -> Text -> Dot n
-uCircle'               = uCircle       [pastel28 2, Width 1] -- colorCombo2025 1
+uCircle'               = uCircle        $ uFixedSize [Width 1] -- colorCombo2025 1
 
 uTriangle              :: [Attribute] -> n -> Text -> Dot n
-uTriangle       as     = uBaseShape' $ [shape  Triangle]  ++ as
+uTriangle       as     = uBaseShape $ [shape  Triangle,      pastel28 3] ++ as
 uTriangle'             ::                n -> Text -> Dot n
-uTriangle'             = uTriangle       [pastel28 2, Width 1] -- colorCombo2025 1
+uTriangle'             = uTriangle      $ uFixedSize [Width 1] -- colorCombo2025 1
 
 uStar                  :: [Attribute] -> n -> Text -> Dot n
-uStar           as     = uBaseShape' $ [shape  Star]  ++ as
+uStar           as     = uBaseShape $ [shape  Star,          pastel28 7] ++ as
 uStar'                 ::                n -> Text -> Dot n
-uStar'                 = uStar       [pastel28 2, Width 1] -- colorCombo2025 1
+uStar'                 = uStar          $ uFixedSize [Width 1] -- colorCombo2025 1
 
 uRectangle             :: [Attribute] -> n -> Text -> Dot n
-uRectangle      as     = uBaseShape $ [shape     BoxShape] ++ as
+uRectangle      as     = uBaseShape $ [shape     BoxShape,   pastel28 5] ++ as
 uRectangle'            ::                n -> Text -> Dot n
-uRectangle'            = uRectangle    [pastel28 5, Width 1] -- colorCombo2025 3
+uRectangle'            = uRectangle     $ uFixedSize [Width 1] -- colorCombo2025 3
 
 uDiamond               :: [Attribute] -> n -> Text -> Dot n
-uDiamond        as     = uBaseShape' $ [Shape DiamondShape] ++ as
+uDiamond        as     = uBaseShape $ [Shape  DiamondShape,  pastel28 4] ++ as
 uDiamond'              ::                n -> Text -> Dot n
-uDiamond'              = uDiamond     [pastel28 6,       Width 1.5, Height 1.5]
+uDiamond'              = uDiamond       $ uFixedSize [Width 1.5, Height 1.5]
 
 uDoubleOctagon         :: [Attribute] -> n -> Text -> Dot n
-uDoubleOctagon  as     = uBaseShape' $ [Shape DoubleOctagon] ++ as
+uDoubleOctagon  as     = uBaseShape $ [Shape  DoubleOctagon, pastel28 6] ++ as
 uDoubleOctagon'        ::                n -> Text -> Dot n
-uDoubleOctagon'        = uDoubleOctagon  [pastel28 6,       Width 1.5, Height 1.5]
+uDoubleOctagon'        = uDoubleOctagon $ uFixedSize [Width 1.5, Height 1.5]
 
 ------------------------------------------------------------------------------
 -- I/O
