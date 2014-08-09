@@ -1,6 +1,6 @@
 {-
 Created       : 2014 Feb 26 (Wed) 18:54:30 by Harold Carr.
-Last Modified : 2014 Aug 03 (Sun) 11:44:44 by Harold Carr.
+Last Modified : 2014 Aug 08 (Fri) 19:54:00 by Harold Carr.
 -}
 
 {-# LANGUAGE MultiParamTypeClasses #-}
@@ -37,25 +37,45 @@ colorCombo2025 n = Color $ colorCombo2025CL n
 ------------------------------------------------------------------------------
 -- Shapes
 
-doubleCircle        :: [Attribute] -> n -> Text -> Dot n
-doubleCircle as n l = node n $ [textLabel l, shape DoubleCircle, FixedSize SetNodeSize, style filled] ++ as
-doubleCircle'       :: n -> Text -> Dot n
-doubleCircle'       = doubleCircle [pastel28 1, Width 1] -- colorCombo2025 1
+uBaseShape             :: [Attribute] -> n -> Text -> Dot n
+uBaseShape      as n l = node n $ [textLabel l, style filled] ++ as
+uBaseShape'            :: [Attribute] -> n -> Text -> Dot n
+uBaseShape'     as     = uBaseShape $ [FixedSize SetNodeSize] ++ as
 
-circle              :: [Attribute] -> n -> Text -> Dot n
-circle       as n l = node n $ [textLabel l, shape       Circle, FixedSize SetNodeSize, style filled] ++ as
-circle'             :: n -> Text -> Dot n
-circle'             = circle       [pastel28 2, Width 1] -- colorCombo2025 1
+uDoubleCircle          :: [Attribute] -> n -> Text -> Dot n
+uDoubleCircle   as     = uBaseShape' $ [shape DoubleCircle] ++ as
+uDoubleCircle'         ::                n -> Text -> Dot n
+uDoubleCircle'         = uDoubleCircle [pastel28 1, Width 1] -- colorCombo2025 1
 
-rectangle           :: [Attribute] -> n -> Text -> Dot n
-rectangle    as n l = node n $ [textLabel l, shape     BoxShape,                        style filled] ++ as
-rectangle'          :: n -> Text -> Dot n
-rectangle'          = rectangle    [pastel28 5, Width 1] -- colorCombo2025 3
+uCircle                :: [Attribute] -> n -> Text -> Dot n
+uCircle         as     = uBaseShape' $ [shape  Circle]  ++ as
+uCircle'               ::                n -> Text -> Dot n
+uCircle'               = uCircle       [pastel28 2, Width 1] -- colorCombo2025 1
 
-decision            :: [Attribute] -> n -> Text -> Dot n
-decision     as n l = node n $ [textLabel l, Shape DiamondShape, FixedSize SetNodeSize, style filled] ++ as
-decision'           :: n -> Text -> Dot n
-decision'           = decision     [pastel28 6,       Width 1.5, Height 1.5]
+uTriangle              :: [Attribute] -> n -> Text -> Dot n
+uTriangle       as     = uBaseShape' $ [shape  Triangle]  ++ as
+uTriangle'             ::                n -> Text -> Dot n
+uTriangle'             = uTriangle       [pastel28 2, Width 1] -- colorCombo2025 1
+
+uStar                  :: [Attribute] -> n -> Text -> Dot n
+uStar           as     = uBaseShape' $ [shape  Star]  ++ as
+uStar'                 ::                n -> Text -> Dot n
+uStar'                 = uStar       [pastel28 2, Width 1] -- colorCombo2025 1
+
+uRectangle             :: [Attribute] -> n -> Text -> Dot n
+uRectangle      as     = uBaseShape $ [shape     BoxShape] ++ as
+uRectangle'            ::                n -> Text -> Dot n
+uRectangle'            = uRectangle    [pastel28 5, Width 1] -- colorCombo2025 3
+
+uDiamond               :: [Attribute] -> n -> Text -> Dot n
+uDiamond        as     = uBaseShape' $ [Shape DiamondShape] ++ as
+uDiamond'              ::                n -> Text -> Dot n
+uDiamond'              = uDiamond     [pastel28 6,       Width 1.5, Height 1.5]
+
+uDoubleOctagon         :: [Attribute] -> n -> Text -> Dot n
+uDoubleOctagon  as     = uBaseShape' $ [Shape DoubleOctagon] ++ as
+uDoubleOctagon'        ::                n -> Text -> Dot n
+uDoubleOctagon'        = uDoubleOctagon  [pastel28 6,       Width 1.5, Height 1.5]
 
 ------------------------------------------------------------------------------
 -- I/O
