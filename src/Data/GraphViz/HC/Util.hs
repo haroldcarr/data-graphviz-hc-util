@@ -1,6 +1,6 @@
 {-
 Created       : 2014 Feb 26 (Wed) 18:54:30 by Harold Carr.
-Last Modified : 2014 Aug 10 (Sun) 16:08:05 by Harold Carr.
+Last Modified : 2015 Nov 11 (Wed) 19:42:38 by Harold Carr.
 -}
 
 {-# LANGUAGE MultiParamTypeClasses #-}
@@ -80,14 +80,14 @@ uDoubleOctagon'        = uDoubleOctagon $ uFixedSize [Width 1.5, Height 1.5]
 ------------------------------------------------------------------------------
 -- I/O
 
-doDots :: PrintDotRepr dg n => [(FilePath, dg n)] -> IO ()
-doDots cases = doDots' Dot cases
+doDots :: PrintDotRepr dg n => FilePath -> [(FilePath, dg n)] -> IO ()
+doDots dir = doDots' dir Dot
 
-doDots' :: PrintDotRepr dg n => GraphvizCommand -> [(FilePath, dg n)] -> IO ()
-doDots' command cases = forM_ cases (createImage command)
+doDots' :: PrintDotRepr dg n => FilePath -> GraphvizCommand -> [(FilePath, dg n)] -> IO ()
+doDots' dir command cases = forM_ cases (createImage dir command)
 
-createImage :: PrintDotRepr dg n => GraphvizCommand -> (FilePath, dg n) -> IO FilePath
-createImage command (n, g) = createImageInDir command "/tmp" n Png g
+createImage :: PrintDotRepr dg n => FilePath -> GraphvizCommand -> (FilePath, dg n) -> IO FilePath
+createImage dir command (n, g) = createImageInDir command dir n Png g
 
 createImageInDir :: PrintDotRepr dg n => GraphvizCommand -> FilePath -> FilePath -> GraphvizOutput -> dg n -> IO FilePath
 createImageInDir c d n o g = Data.GraphViz.addExtension (runGraphvizCommand c g) o (combine d n)
