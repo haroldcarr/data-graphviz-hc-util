@@ -25,10 +25,10 @@ pastel28 n = Color (toColorList [toColor (BC (BScheme Pastel2 8) n)])
 
 -- http://www.colorcombos.com/color-schemes/2025/ColorCombo2025.html
 colorCombo2025CL :: Word8 -> ColorList
-colorCombo2025CL n | n == 1 = c $ (RGB 127 108 138)
-                   | n == 2 = c $ (RGB 175 177 112)
-                   | n == 3 = c $ (RGB 226 206 179)
-                   | n == 4 = c $ (RGB 172 126 100)
+colorCombo2025CL n | n == 1 = c (RGB 127 108 138)
+                   | n == 2 = c (RGB 175 177 112)
+                   | n == 3 = c (RGB 226 206 179)
+                   | n == 4 = c (RGB 172 126 100)
  where c rgb = toColorList [rgb]
 
 colorCombo2025 :: Word8 -> Attribute
@@ -76,6 +76,21 @@ uDoubleOctagon         :: [Attribute] -> n -> Text -> Dot n
 uDoubleOctagon  as     = uBaseShape $ [Shape  DoubleOctagon, pastel28 6] ++ as
 uDoubleOctagon'        ::                n -> Text -> Dot n
 uDoubleOctagon'        = uDoubleOctagon $ uFixedSize [Width 1.5, Height 1.5]
+
+------------------------------------------------------------------------------
+-- ALIASES (STATE/PETRI-NET DIAGRAMS)
+
+startEndClosedState                 :: L.Text -> L.Text -> Dot L.Text
+startEndClosedState                 = uDoubleCircle'
+
+state                               :: L.Text -> L.Text -> Dot L.Text
+state                               = uCircle'
+
+transition                          :: L.Text -> L.Text -> Dot L.Text
+transition                          = uRectangle []
+
+decision                            :: L.Text -> L.Text -> Dot L.Text
+decision            n l             = node n [textLabel l, shape DiamondShape, pastel28 6, style filled, FixedSize SetNodeSize, Width 1.5, Height 1.5]
 
 ------------------------------------------------------------------------------
 -- I/O
