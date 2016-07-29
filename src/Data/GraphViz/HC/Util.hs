@@ -35,6 +35,13 @@ colorCombo2025 :: Word8 -> Attribute
 colorCombo2025 n = Color $ colorCombo2025CL n
 
 ------------------------------------------------------------------------------
+-- one to many
+
+(-->*)       :: n -> [n] -> Dot n
+f -->*   [t]  = f --> t
+f -->* (t:ts) = f --> t >> f -->* ts
+
+------------------------------------------------------------------------------
 -- Shapes
 
 uBaseShape             :: [Attribute] -> n -> Text -> Dot n
