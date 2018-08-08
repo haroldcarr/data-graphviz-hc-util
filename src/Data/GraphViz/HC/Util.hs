@@ -1,10 +1,9 @@
 {-
 Created       : 2014 Feb 26 (Wed) 18:54:30 by Harold Carr.
-Last Modified : 2015 Nov 11 (Wed) 19:42:38 by Harold Carr.
+Last Modified : 2018 Aug 08 (Wed) 08:07:01 by Harold Carr.
 -}
 
 {-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE OverloadedStrings     #-}
 
 module Data.GraphViz.HC.Util where
 
@@ -29,6 +28,7 @@ colorCombo2025CL n | n == 1 = c (RGB 127 108 138)
                    | n == 2 = c (RGB 175 177 112)
                    | n == 3 = c (RGB 226 206 179)
                    | n == 4 = c (RGB 172 126 100)
+                   | otherwise = c (RGB 172 126 100) -- TODO
  where c rgb = toColorList [rgb]
 
 colorCombo2025 :: Word8 -> Attribute
@@ -40,6 +40,7 @@ colorCombo2025 n = Color $ colorCombo2025CL n
 (-->*)       :: n -> [n] -> Dot n
 f -->*   [t]  = f --> t
 f -->* (t:ts) = f --> t >> f -->* ts
+_ -->*    []  = error "nowhere to go"
 
 ------------------------------------------------------------------------------
 -- Shapes
@@ -108,15 +109,33 @@ doDots dir = doDots' dir Dot
 doDots' :: PrintDotRepr dg n => FilePath -> GraphvizCommand -> [(FilePath, dg n)] -> IO ()
 doDots' dir command cases = forM_ cases (createImage dir command)
 
+doDots''
+  :: PrintDotRepr dg n
+  => FilePath
+  -> GraphvizCommand
+  -> [ ( FilePath, Attribute -> dg n ) ]
+  -> [Attribute]
+  -> [GraphvizOutput]
+  -> IO ()
+doDots'' dir command cases attributes outFormats =
+  forM_ cases $ \(fp, g) ->
+    forM_ attributes $ \a ->
+      forM_ outFormats $ \outFormat ->
+        createImage' dir command (fp, g a) outFormat
+
 createImage :: PrintDotRepr dg n => FilePath -> GraphvizCommand -> (FilePath, dg n) -> IO FilePath
 createImage dir command (n, g) = createImageInDir command dir n Png g
+
+createImage'
+  :: PrintDotRepr dg n => FilePath -> GraphvizCommand -> (FilePath, dg n) -> GraphvizOutput -> IO FilePath
+createImage' dir command (n, g) outFormat = createImageInDir command dir n outFormat g
 
 createImageInDir :: PrintDotRepr dg n => GraphvizCommand -> FilePath -> FilePath -> GraphvizOutput -> dg n -> IO FilePath
 createImageInDir c d n o g = Data.GraphViz.addExtension (runGraphvizCommand c g) o (combine d n)
 
 {-
 Usage
-#+BEGIN_SRC haskell
+
 main :: IO ()
 main = do
     doDots [ ("ex1" , graphToDot ex1Params ex1) ]
@@ -124,6 +143,15 @@ main = do
            , ("ex3" , ex3)
            , ("ex4" , ex4)
            ]
+
+To produce dot output:
+
+import           Data.GraphViz
+createImageInDir Dot "/tmp" "out.dot" Canon     ex2
+createImageInDir Dot "/tmp" "out.dot" DotOutput ex2
+
+To produce png from above output:
+dot -Tpng out.dot.gv  -o out.dot.gv.png
 -}
 
 -- End of file.
