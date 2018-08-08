@@ -1,6 +1,6 @@
 {-
 Created       : 2014 Feb 26 (Wed) 18:54:30 by Harold Carr.
-Last Modified : 2018 Aug 08 (Wed) 08:07:01 by Harold Carr.
+Last Modified : 2018 Aug 08 (Wed) 12:52:20 by Harold Carr.
 -}
 
 {-# LANGUAGE MultiParamTypeClasses #-}
@@ -12,7 +12,7 @@ import           Data.GraphViz
 import           Data.GraphViz.Attributes.Colors.Brewer
 import           Data.GraphViz.Attributes.Complete
 import           Data.GraphViz.Types.Monadic
-import           Data.Text.Lazy                         as L
+import qualified Data.Text.Lazy                         as L
 import           Data.Word
 import           System.FilePath
 
@@ -45,44 +45,44 @@ _ -->*    []  = error "nowhere to go"
 ------------------------------------------------------------------------------
 -- Shapes
 
-uBaseShape             :: [Attribute] -> n -> Text -> Dot n
+uBaseShape             :: [Attribute] -> n -> L.Text -> Dot n
 uBaseShape      as n l = node n $ [textLabel l, style filled] ++ as
 uFixedSize             :: [Attribute] -> [Attribute]
 uFixedSize             = ([FixedSize SetNodeSize] ++)
 
-uDoubleCircle          :: [Attribute] -> n -> Text -> Dot n
+uDoubleCircle          :: [Attribute] -> n -> L.Text -> Dot n
 uDoubleCircle   as     = uBaseShape $ [shape  DoubleCircle,  pastel28 1] ++ as
-uDoubleCircle'         ::                n -> Text -> Dot n
+uDoubleCircle'         ::                n -> L.Text -> Dot n
 uDoubleCircle'         = uDoubleCircle  $ uFixedSize [Width 1] -- colorCombo2025 1
 
-uCircle                :: [Attribute] -> n -> Text -> Dot n
+uCircle                :: [Attribute] -> n -> L.Text -> Dot n
 uCircle         as     = uBaseShape $ [shape  Circle,        pastel28 2] ++ as
-uCircle'               ::                n -> Text -> Dot n
+uCircle'               ::                n -> L.Text -> Dot n
 uCircle'               = uCircle        $ uFixedSize [Width 1] -- colorCombo2025 1
 
-uTriangle              :: [Attribute] -> n -> Text -> Dot n
+uTriangle              :: [Attribute] -> n -> L.Text -> Dot n
 uTriangle       as     = uBaseShape $ [shape  Triangle,      pastel28 3] ++ as
-uTriangle'             ::                n -> Text -> Dot n
+uTriangle'             ::                n -> L.Text -> Dot n
 uTriangle'             = uTriangle      $ uFixedSize [Width 1] -- colorCombo2025 1
 
-uStar                  :: [Attribute] -> n -> Text -> Dot n
+uStar                  :: [Attribute] -> n -> L.Text -> Dot n
 uStar           as     = uBaseShape $ [shape  Star,          pastel28 7] ++ as
-uStar'                 ::                n -> Text -> Dot n
+uStar'                 ::                n -> L.Text -> Dot n
 uStar'                 = uStar          $ uFixedSize [Width 1] -- colorCombo2025 1
 
-uRectangle             :: [Attribute] -> n -> Text -> Dot n
+uRectangle             :: [Attribute] -> n -> L.Text -> Dot n
 uRectangle      as     = uBaseShape $ [shape     BoxShape,   pastel28 5] ++ as
-uRectangle'            ::                n -> Text -> Dot n
+uRectangle'            ::                n -> L.Text -> Dot n
 uRectangle'            = uRectangle     $ uFixedSize [Width 1] -- colorCombo2025 3
 
-uDiamond               :: [Attribute] -> n -> Text -> Dot n
+uDiamond               :: [Attribute] -> n -> L.Text -> Dot n
 uDiamond        as     = uBaseShape $ [Shape  DiamondShape,  pastel28 4] ++ as
-uDiamond'              ::                n -> Text -> Dot n
+uDiamond'              ::                n -> L.Text -> Dot n
 uDiamond'              = uDiamond       $ uFixedSize [Width 1.5, Height 1.5]
 
-uDoubleOctagon         :: [Attribute] -> n -> Text -> Dot n
+uDoubleOctagon         :: [Attribute] -> n -> L.Text -> Dot n
 uDoubleOctagon  as     = uBaseShape $ [Shape  DoubleOctagon, pastel28 6] ++ as
-uDoubleOctagon'        ::                n -> Text -> Dot n
+uDoubleOctagon'        ::                n -> L.Text -> Dot n
 uDoubleOctagon'        = uDoubleOctagon $ uFixedSize [Width 1.5, Height 1.5]
 
 ------------------------------------------------------------------------------
@@ -121,7 +121,9 @@ doDots'' dir command cases attributes outFormats =
   forM_ cases $ \(fp, g) ->
     forM_ attributes $ \a ->
       forM_ outFormats $ \outFormat ->
-        createImage' dir command (fp, g a) outFormat
+        createImage' dir command (mk fp a, g a) outFormat
+ where
+  mk fp a = fp ++ filter (/=' ') (show a)
 
 createImage :: PrintDotRepr dg n => FilePath -> GraphvizCommand -> (FilePath, dg n) -> IO FilePath
 createImage dir command (n, g) = createImageInDir command dir n Png g
