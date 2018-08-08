@@ -1,6 +1,6 @@
 {-
 Created       : 2014 Feb 26 (Wed) 18:54:30 by Harold Carr.
-Last Modified : 2018 Aug 08 (Wed) 13:00:50 by Harold Carr.
+Last Modified : 2018 Aug 08 (Wed) 13:51:57 by Harold Carr.
 -}
 
 {-# LANGUAGE MultiParamTypeClasses #-}
@@ -123,7 +123,7 @@ doDots'' dir command cases attributes outFormats =
       forM_ outFormats $ \outFormat ->
         createImage' dir command (mk fp a, g a) outFormat
  where
-  mk fp a = fp ++ filter (/=' ') (show a)
+  mk fp a = fp ++ "-" ++ filter (/=' ') (show a)
 
 createImage :: PrintDotRepr dg n => FilePath -> GraphvizCommand -> (FilePath, dg n) -> IO FilePath
 createImage dir command (n, g) = createImageInDir command dir n Png g
